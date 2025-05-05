@@ -1,0 +1,49 @@
+// backend/models/Washer.js
+const mongoose = require('mongoose');
+
+const washerSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+
+  // 💬 Description du service offert
+  serviceDescription: {
+    type: String,
+    required: true,
+    maxlength: 1000
+  },
+
+  // 🧰 Équipements disponibles
+  availableEquipments: [
+    {
+      type: String,
+      required: true
+    }
+  ],
+
+  // 📍 Position du washer
+  location: {
+    latitude: { type: Number },
+    longitude: { type: Number }
+  },
+
+  // 📊 Statistiques
+  totalServices: { type: Number, default: 0 },
+  pendingServices: { type: Number, default: 0 },
+  totalSpent: { type: Number, default: 0 },
+
+  // 🕒 Services récents
+  recentServices: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SearchRequest' }],
+
+  // ⭐ Avis
+  averageRating: { type: Number, default: 0 },
+  ratings: [
+    {
+      stars: { type: Number, required: true, min: 1, max: 5 },
+      comment: { type: String },
+      from: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      date: { type: Date, default: Date.now }
+    }
+  ]
+
+}, { timestamps: true });
+
+module.exports = mongoose.model('Washer', washerSchema);
